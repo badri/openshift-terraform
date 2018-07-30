@@ -1,0 +1,65 @@
+---
+- hosts: all
+  vars:
+    packages:
+      - git
+      - nano
+      - net-tools
+      - docker-1.13.1
+      - bind-utils
+      - iptables-services
+      - bridge-utils
+      - bash-completion
+      - kexec-tools
+      - sos
+      - psacct
+      - openssl-devel
+      - httpd-tools
+      - NetworkManager
+      - python-cryptography
+      - python-devel
+      - python-passlib
+      - java-1.8.0-openjdk-headless
+      - "@Development Tools"
+
+  tasks:
+    - name: Install required dependencies
+      yum:
+        update_cache: true
+        name: "{{ packages }}"
+
+    - name: Install EPEL from a remote repo
+      yum:
+        name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+        state: present
+
+    - name: Update EPEL repo details
+      replace:
+        path: /etc/yum.repos.d/epel.repo
+        regexp: '^enabled=1'
+        replace: enabled=0
+
+    - name: Start Network service
+      systemd:
+        state: started
+        name: NetworkManager
+
+    - name: Enable Network service
+      systemd:
+        enabled: yes
+        name: NetworkManager
+
+    - name: Update /etc/hosts
+      blockinfile:
+        block: "{{ lookup('template', 'hostsfile.j2') }}"
+        path: /etc/hosts
+
+    - name: Restart docker service
+      systemd:
+        state: restarted
+        name: docker
+
+    - name: Enable docker service
+      systemd:
+        enabled: yes
+        name: docker

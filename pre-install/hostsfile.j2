@@ -1,0 +1,8 @@
+{% for group in groups %}
+{% if groups[group] and group == 'all' %}
+{% for host in groups[group] %}
+{{hostvars[host].ansible_default_ipv4.address}} {{ hostvars[host].ansible_hostname }} {{ hostvars[host].inventory_hostname }}
+{% endfor %}
+
+{% endif %}
+{% endfor %}
