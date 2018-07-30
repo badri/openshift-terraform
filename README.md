@@ -80,6 +80,6 @@ $ terraform destroy
 
 ## Contact
 
-- [email me.](mailto:lakshmi@lakshminp.com?subject=Openshift terraform)
+- [email me](mailto:lakshmi@lakshminp.com?subject=Openshift%20Terraform)
 - [lakshminp.com](https://www.lakshminp.com)
 - [@lakshminp](https://twitter.com/lakshminp)
