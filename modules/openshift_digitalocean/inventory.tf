@@ -21,7 +21,7 @@ data "template_file" "inventory" {
   vars {
     master_ips                         = "${format("%s openshift_ip=%s openshift_schedulable=true", digitalocean_droplet.master.ipv4_address, digitalocean_droplet.master.ipv4_address)}"
     etcd_ips                           = "${format("%s openshift_ip=%s", digitalocean_droplet.master.ipv4_address, digitalocean_droplet.master.ipv4_address)}"
-    master_node_entry                  = "${format("%s openshift_ip=%s openshift_schedulable=true openshift_node_labels=\"{'region': 'primary', 'zone': 'east'}\"", digitalocean_droplet.master.ipv4_address, digitalocean_droplet.master.ipv4_address)}"
+    master_node_entry                  = "${format("%s openshift_ip=%s openshift_schedulable=true openshift_node_labels=\"{'region': 'infra', 'zone': 'east'}\"", digitalocean_droplet.master.ipv4_address, digitalocean_droplet.master.ipv4_address)}"
     nodes                              = "${join("\n", formatlist("%s openshift_ip=%s openshift_schedulable=true openshift_node_labels=\"{'region': 'primary', 'zone': 'east'}\"", digitalocean_droplet.nodes.*.ipv4_address, digitalocean_droplet.nodes.*.ipv4_address))}"
     glusterfs_master                   = "${format("%s glusterfs_devices='[ \"/dev/sda\" ]'", digitalocean_droplet.master.ipv4_address)}"
     glusterfs_nodes                    = "${join("\n", formatlist("%s glusterfs_devices='[ \"/dev/sda\" ]'", digitalocean_droplet.nodes.*.ipv4_address))}"
