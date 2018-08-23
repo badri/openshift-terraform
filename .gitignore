@@ -4,8 +4,11 @@ terraform.tfvars
 terraform.tfstate
 terraform.tfstate.backup
 
-# The generated inventory file.
+# The generated inventory files.
 inventory.cfg
+preinstall-inventory.cfg
 
 # Emacs backup files
 *~
+
+openshift-ansible

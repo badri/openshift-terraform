@@ -19,12 +19,20 @@ A lot of this setup is insipred by [Get up and running with OpenShift on AWS](ht
 
 ### Provision the infrastructure
 
+
+
 ```
+$ export TF_VAR_domain=<your-base-domain-name>
 $ export DIGITALOCEAN_TOKEN=<do-token>
 $ terraform init
 $ terraform apply
 ```
 
+This will generate 2 inventory files,
+
+`preinstall-inventory.cfg` for installing the prerequisites in the Open Shift cluster.
+
+`inventory.cfg` needed for the Ansible OpenShift installer.
 
 ### Install prerequisite software
 
@@ -37,33 +45,66 @@ $ ansible-playbook -u root --private-key=~/.ssh/tf -i preinstall-inventory.cfg .
 Clone the playbook for v3.9.
 
 ```
-$ git clone git@github.com:openshift/openshift-ansible.git --branch release-3.9
+$ git clone git@github.com:openshift/openshift-ansible.git --branch release-3.9 --depth 1
 $ cd openshift-ansible
 ```
 
 Prerequisite check.
 
 ```
-$ ansible-playbook -i inventory.cfg playbooks/prerequisites.yml
+$ ansible-playbook -i ../inventory.cfg playbooks/prerequisites.yml
 ```
 
 Provision the cluster.
 
 ```
-$ ansible-playbook -i inventory.cfg playbooks/deploy_cluster.yml
+$ ansible-playbook -i ../inventory.cfg playbooks/deploy_cluster.yml
 ```
 
 ### Post install steps
+
+Login to master node using,
+
+```
+$ ssh -i ~/.ssh/tf root@console.example.com
+```
+
+And to the nodes using,
+
+```
+$ ssh -i ~/.ssh/tf root@node-01.example.com
+```
+
+Inside master node,
+
+Create admin user.
+
+```
+$ htpasswd -cb /etc/origin/master/htpasswd admin <password>
+```
 
 Set up GlusterFS as the default storageclass.
 
 ```
 $ kubectl get storageclass
+NAME                PROVISIONER               AGE
+glusterfs-storage   kubernetes.io/glusterfs   16m
 ```
 
 ```
 $ oc patch storageclass glusterfs-storage -p '{"metadata":{"annotations":{"storageclass.beta.kubernetes.io/is-default-class":"true"}}}'
 ```
+
+### Deploy Drupal s2i image
+
+Import the image into the openshift registry.
+
+```
+$ oc project openshift # all image streams should belong to this namespace
+$ oc import-image lakshminp/openshift-drupal:v11 --confirm
+```
+
+Add the template either via UI or via cli.
 
 ## Day 2 stuff
 
