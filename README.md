@@ -28,6 +28,12 @@ $ terraform init
 $ terraform apply
 ```
 
+Generate SSH keypair specific to this cluster. It is called `tf` and `tf.pub` by default. If you call it by a different name, change it in `variables.tf`.
+
+```
+$ terraform apply
+```
+
 This will generate 2 inventory files,
 
 `preinstall-inventory.cfg` for installing the prerequisites in the Open Shift cluster.
