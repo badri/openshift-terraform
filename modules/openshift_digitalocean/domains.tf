@@ -7,7 +7,7 @@ resource "digitalocean_domain" "openshift_base" {
 
 // console url
 resource "digitalocean_record" "openshift_web_console" {
-  domain = "${var.domain}"
+  domain = "${digitalocean_domain.openshift_base.name}"
   type   = "A"
   name   = "console"
   value  = "${digitalocean_droplet.master.ipv4_address}"
@@ -15,7 +15,7 @@ resource "digitalocean_record" "openshift_web_console" {
 
 // apps subdomains
 resource "digitalocean_record" "openshift_apps" {
-  domain = "${var.domain}"
+  domain = "${digitalocean_domain.openshift_base.name}"
   type   = "CNAME"
   name   = "*.apps"
   value  = "@"
@@ -24,7 +24,7 @@ resource "digitalocean_record" "openshift_apps" {
 // node urls
 resource "digitalocean_record" "openshift_nodes" {
   count  = "${var.nodes_count}"
-  domain = "${var.domain}"
+  domain = "${digitalocean_domain.openshift_base.name}"
   type   = "A"
   name   = "${format("%s%02d", var.node_prefix, count.index + 1)}"
   value  = "${element(digitalocean_droplet.nodes.*.ipv4_address, count.index)}"
