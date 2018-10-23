@@ -1,0 +1,212 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cinder-csi-role
+rules:
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["create", "delete", "get", "list", "watch", "update", "patch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "get", "list", "watch", "update", "patch"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "update", "patch"]
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "list", "watch", "update", "patch"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["volumeattachments"]
+    verbs: ["get", "list", "watch", "update", "patch"]
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+
+---
+
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cinder-csi-role
+subjects:
+  - kind: ServiceAccount
+    name: cinder-csi
+    namespace: csi
+roleRef:
+  kind: ClusterRole
+  name: cinder-csi-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: v1
+data:
+  cloud.conf: W0dsb2JhbF0KYXV0aC11cmwgPSBodHRwczovL2V4YW1wbGUuY29tOjEzMDAwL3YyLjAvCnVzZXJuYW1lID0gYWxhZGRpbgpwYXNzd29yZCA9IG9wZW5zZXNhbWUKdGVuYW50LWlkID0gZTBmYTg1YjZhMDY0NDM5NTlkMmQzYjQ5NzE3NGJlZDYKcmVnaW9uID0gcmVnaW9uT25lCg== 
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: cloudconfig
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: cinder-csi-controller
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cinder-csi-controllers
+  template:
+    metadata:
+      labels:
+        app: cinder-csi-controllers
+    spec:
+      serviceAccount: cinder-csi
+      containers:
+        - name: csi-attacher
+          image: registry.access.redhat.com/openshift3/csi-attacher:v3.10
+          args:
+            - "--v=5"
+            - "--csi-address=$(ADDRESS)"
+            - "--leader-election"
+            - "--leader-election-namespace=$(MY_NAMESPACE)"
+            - "--leader-election-identity=$(MY_NAME)"
+          env:
+            - name: MY_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: MY_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: ADDRESS
+              value: /csi/csi.sock
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+        - name: csi-provisioner
+          image: registry.access.redhat.com/openshift3/csi-provisioner:v3.10
+          args:
+            - "--v=5"
+            - "--provisioner=csi-cinderplugin"
+            - "--csi-address=$(ADDRESS)"
+          env:
+            - name: ADDRESS
+              value: /csi/csi.sock
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+        - name: cinder-driver
+          image: quay.io/jsafrane/cinder-csi-plugin
+          command: [ "/bin/cinder-csi-plugin" ]
+          args:
+            - "--nodeid=$(NODEID)"
+            - "--endpoint=unix://$(ADDRESS)"
+            - "--cloud-config=/etc/cloudconfig/cloud.conf"
+          env:
+            - name: NODEID
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: ADDRESS
+              value: /csi/csi.sock
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+            - name: cloudconfig
+              mountPath: /etc/cloudconfig
+      volumes:
+        - name: socket-dir
+          emptyDir:
+        - name: cloudconfig
+          secret:
+            secretName: cloudconfig
+
+---
+
+kind: DaemonSet
+apiVersion: apps/v1
+metadata:
+  name: cinder-csi-ds
+spec:
+  selector:
+    matchLabels:
+      app: cinder-csi-driver
+  template:
+    metadata:
+      labels:
+        app: cinder-csi-driver
+    spec:
+      nodeSelector:
+          role: node
+      serviceAccount: cinder-csi
+      containers:
+        - name: csi-driver-registrar
+          image: registry.access.redhat.com/openshift3/csi-driver-registrar:v3.10
+          securityContext:
+            privileged: true
+          args:
+            - "--v=5"
+            - "--csi-address=$(ADDRESS)"
+          env:
+            - name: ADDRESS
+              value: /csi/csi.sock
+            - name: KUBE_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+        - name: cinder-driver
+          securityContext:
+            privileged: true
+            capabilities:
+              add: ["SYS_ADMIN"]
+            allowPrivilegeEscalation: true
+          image: quay.io/jsafrane/cinder-csi-plugin
+          command: [ "/bin/cinder-csi-plugin" ]
+          args:
+            - "--nodeid=$(NODEID)"
+            - "--endpoint=unix://$(ADDRESS)"
+            - "--cloud-config=/etc/cloudconfig/cloud.conf"
+          env:
+            - name: NODEID
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: ADDRESS
+              value: /csi/csi.sock
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+            - name: cloudconfig
+              mountPath: /etc/cloudconfig
+            - name: mountpoint-dir
+              mountPath: /var/lib/origin/openshift.local.volumes/pods/
+              mountPropagation: "Bidirectional"
+            - name: cloud-metadata
+              mountPath: /var/lib/cloud/data/
+            - name: dev
+              mountPath: /dev
+      volumes:
+        - name: cloud-metadata
+          hostPath:
+            path: /var/lib/cloud/data/
+        - name: socket-dir
+          hostPath:
+            path: /var/lib/kubelet/plugins/csi-cinderplugin
+            type: DirectoryOrCreate
+        - name: mountpoint-dir
+          hostPath:
+            path: /var/lib/origin/openshift.local.volumes/pods/
+            type: Directory
+        - name: cloudconfig
+          secret:
+            secretName: cloudconfig
+        - name: dev
+          hostPath:
+            path: /dev
