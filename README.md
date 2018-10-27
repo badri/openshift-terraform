@@ -48,11 +48,17 @@ $ ansible-playbook -u root --private-key=~/.ssh/tf -i preinstall-inventory.cfg .
 
 ### Install OpenShift cluster on provisioned infrastructure
 
-Clone the playbook for v3.9.
+Clone the playbook for v3.10.
 
 ```
-$ git clone git@github.com:openshift/openshift-ansible.git --branch release-3.9 --depth 1
+$ git clone git@github.com:openshift/openshift-ansible.git --branch release-3.10 --depth 1
 $ cd openshift-ansible
+```
+
+Install the verion of Ansible specified in the above repo. To do this, create a virtualenv, and run:
+
+```
+$ pip install -r requirements.txt
 ```
 
 Prerequisite check.
