@@ -55,6 +55,12 @@ $ git clone git@github.com:openshift/openshift-ansible.git --branch release-3.9 
 $ cd openshift-ansible
 ```
 
+Install the verion of Ansible specified in the above repo. To do this, create a virtualenv, and run:
+
+```
+$ pip install -r requirements.txt
+```
+
 Prerequisite check.
 
 ```
