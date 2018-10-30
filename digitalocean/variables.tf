@@ -9,7 +9,7 @@ variable "private_key_path" {
 }
 
 variable "region" {
-  default = "blr1"
+  default = "tor1"
   description = "The digitalOcean region where the cluster will be spun."
 }
 

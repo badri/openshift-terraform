@@ -1,7 +1,7 @@
 //  Create the infra needed for OpenShift cluster in DO.
 
 module "openshift_digitalocean" {
-  source               = "./modules/openshift_digitalocean"
+  source               = "../modules/openshift_digitalocean"
 
   key_name             = "openshift"
   public_key_path      = "${var.public_key_path}"
@@ -15,7 +15,7 @@ module "openshift_digitalocean" {
 
 
 module "inventory_generation" {
-  source = "./modules/inventory_generation"
+  source = "../modules/inventory_generation"
 
   master_domain = "${module.openshift_digitalocean.master_domain}",
   node_domains = "${module.openshift_digitalocean.node_domains}",

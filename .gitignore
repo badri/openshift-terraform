@@ -11,4 +11,5 @@ preinstall-inventory.cfg
 # Emacs backup files
 *~
 
-openshift-ansible
+openshift-ansible*
+venv
