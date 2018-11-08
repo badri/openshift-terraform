@@ -43,18 +43,22 @@ variable "subnetaz" {
 
 
 variable "master_size" {
-  default = "4gb"
+  default = "m5.xlarge"
   description = "Size of the master VM"
 }
 
 variable "node_size" {
-  default = "4gb"
+  default = "m5.large"
   description = "Size of the Node VMs"
 }
 
 variable "nodes_count" {
   default = 2
   description = "No. of app nodes to create."
+}
+
+variable "node_prefix" {
+  default = "node-"
 }
 
 variable "domain" {

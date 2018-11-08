@@ -1,3 +1,23 @@
+resource "aws_iam_role" "openshift-instance-role" {
+  name = "openshift-instance-role"
+
+  assume_role_policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "sts:AssumeRole",
+            "Principal": {
+                "Service": "ec2.amazonaws.com"
+            },
+            "Effect": "Allow",
+            "Sid": ""
+        }
+    ]
+}
+EOF
+}
+
 resource "aws_iam_user" "openshift-aws-user" {
   name = "openshift-aws-user"
 }
@@ -45,4 +65,9 @@ EOF
 
 resource "aws_iam_access_key" "openshift-aws-user" {
   user    = "${aws_iam_user.openshift-aws-user.name}"
+}
+
+resource "aws_iam_instance_profile" "openshift-instance-profile" {
+  name  = "openshift-instance-profile"
+  role = "${aws_iam_role.openshift-instance-role.name}"
 }
