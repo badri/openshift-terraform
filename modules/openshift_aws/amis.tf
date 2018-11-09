@@ -23,7 +23,3 @@ data "aws_ami" "centos_7_x64" {
     values = ["CentOS Linux 7 x86_64 HVM EBS *"]
   }
 }
-
-output "ami_id" {
-  value = "${data.aws_ami.centos_7_x64.image_id}"
-}

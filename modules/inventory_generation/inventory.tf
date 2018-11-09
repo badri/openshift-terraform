@@ -30,6 +30,8 @@ data "template_file" "inventory" {
     pods_per_core                      = "${var.pods_per_core}"
     openshift_public_host_name         = "${var.master_domain}"
     openshift_master_default_subdomain = "${var.apps_subdomain}"
+    access_key = "${var.access_key}" # good candidate for go templates
+    secret_key = "${var.secret_key}"
   }
 }
 

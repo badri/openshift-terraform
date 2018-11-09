@@ -65,3 +65,13 @@ variable "domain" {
   default = "example.com"
   description = "Base domain name for the Openshift cluster."
 }
+
+// console.example.com
+variable "console_subdomain" {
+  default = "console"
+}
+
+// *.apps.example.com
+variable "apps_subdomain" {
+  default = "apps"
+}

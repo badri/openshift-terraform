@@ -2,21 +2,6 @@ resource "aws_route53_zone" "openshift_route53_zone" {
   name = "${var.domain}"
 }
 
-
-// I manage my records in DO, hence update DO
-resource "digitalocean_domain" "openshift_base" {
-  name  = "${var.domain}"
-}
-
-// Add the hosted zone Nameservers which got generated
-resource "digitalocean_record" "route53_nameservers" {
-  domain = "${digitalocean_domain.openshift_base.name}"
-  type   = "NS"
-  value  = "${element(aws_route53_zone.openshift_route53_zone.name_servers, count.index)}."
-  name = "@"
-  count    = "4" // assign to var and substitute here
-}
-
 // Master record
 resource "aws_route53_record" "openshift-master-record" {
     zone_id = "${aws_route53_zone.openshift_route53_zone.zone_id}"
@@ -50,3 +35,8 @@ resource "aws_route53_record" "openshift-app-subdomain" {
     "${var.domain}"
   ]
 }
+/*
+output "nameservers" {
+  value = "${aws_route53_zone.openshift_route53_zone.name_servers}"
+}
+*/
