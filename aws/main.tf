@@ -1,5 +1,4 @@
 //  Create the infra needed for OpenShift cluster in AWS.
-
 module "openshift_aws" {
   source               = "../modules/openshift_aws"
 
@@ -24,5 +23,7 @@ module "inventory_generation" {
   private_key_path = "${var.private_key_path}"
   access_key = "${module.openshift_aws.access_key}"
   secret_key = "${module.openshift_aws.secret_key}"
-  "ansible_ssh_user" = "centos"
+  ansible_ssh_user = "centos"
+  use_gluster = false
+  provider = "aws"
 }

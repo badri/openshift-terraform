@@ -23,4 +23,6 @@ module "inventory_generation" {
   master_ip_address = "${module.openshift_digitalocean.master_ip_address}",
   node_ip_address = "${module.openshift_digitalocean.node_ip_address}",
   private_key_path = "${var.private_key_path}"
+  use_gluster = true
+  provider = "digitalocean"
 }

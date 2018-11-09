@@ -12,6 +12,11 @@ variable "access_key" {}
 
 variable "secret_key" {}
 
+variable "use_gluster" {}
+
+variable "provider" {}
+
+
 variable "private_key_path" {
   description = "The local private key path, e.g. ~/.ssh/id_rsa"
 }
