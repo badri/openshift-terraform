@@ -16,6 +16,7 @@ variable "use_gluster" {}
 
 variable "provider" {}
 
+variable "cluster_id" {}
 
 variable "private_key_path" {
   description = "The local private key path, e.g. ~/.ssh/id_rsa"

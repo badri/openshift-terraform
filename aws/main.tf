@@ -9,6 +9,8 @@ module "openshift_aws" {
   node_size            = "${var.node_size}"
   nodes_count          = "${var.nodes_count}"
   domain               = "${var.domain}"
+  cluster_name    = "openshift-cluster"
+  cluster_id      = "trext_in_aws"
 }
 
 
@@ -26,4 +28,5 @@ module "inventory_generation" {
   ansible_ssh_user = "centos"
   use_gluster = false
   provider = "aws"
+  cluster_id = "trext_in_aws"
 }

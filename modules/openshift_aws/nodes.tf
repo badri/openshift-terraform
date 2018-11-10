@@ -1,3 +1,11 @@
+locals {
+  common_tags = "${map(
+    "Project", "openshift",
+    "KubernetesCluster", "${var.cluster_name}",
+    "kubernetes.io/cluster/${var.cluster_name}", "${var.cluster_id}"
+  )}"
+}
+
 resource "aws_eip" "master_eip" {
   instance = "${aws_instance.master.id}"
   vpc      = true
@@ -31,9 +39,12 @@ resource "aws_instance" "master" {
   }
 
   key_name = "${aws_key_pair.keypair.key_name}"
-  tags = {
-    Name = "master"
-  }
+  tags = "${merge(
+    local.common_tags,
+    map(
+      "Name", "OpenShift Master"
+    )
+  )}"
 }
 
 resource "aws_eip" "node_eips" {
@@ -73,7 +84,10 @@ resource "aws_instance" "nodes" {
   key_name = "${aws_key_pair.keypair.key_name}"
 
   count = "${var.nodes_count}"
-  tags = {
-    Name = "${format("%s%02d", var.node_prefix, count.index + 1)}"
-  }
+  tags = "${merge(
+    local.common_tags,
+    map(
+      "Name", "${format("%s%02d", var.node_prefix, count.index + 1)}"
+    )
+  )}"
 }

@@ -1,22 +1,5 @@
-// first, the interim inventory to run preconfigure playbook
-data "template_file" "preinstall_inventory" {
-  template = "${file("${path.module}/preinstall-inventory.template.cfg")}"
-
-  vars {
-    master_domain = "${var.master_domain}"
-    node_domains  = "${join("\n", var.node_domains)}"
-  }
-}
-
-//  Create the pre-install inventory.
-resource "local_file" "preinstall_inventory" {
-  content  = "${data.template_file.preinstall_inventory.rendered}"
-  filename = "${path.cwd}/preinstall-inventory.cfg"
-}
-
-
-variable "aws_keys_block" {
-  default = <<EOF
+locals {
+  aws_keys_block = <<EOF
 openshift_cloudprovider_kind=aws
 openshift_cloudprovider_aws_access_key=%s
 openshift_cloudprovider_aws_secret_key=%s
@@ -40,7 +23,8 @@ data "template_file" "inventory" {
     pods_per_core                      = "${var.pods_per_core}"
     openshift_public_host_name         = "${var.master_domain}"
     openshift_master_default_subdomain = "${var.apps_subdomain}"
-    aws_keys_block = "${var.provider == "aws"?format(var.aws_keys_block, var.access_key, var.secret_key):""}"
+    cluster_id = "${var.cluster_id}"
+    aws_keys_block = "${var.provider == "aws"?format(local.aws_keys_block, var.access_key, var.secret_key):""}"
   }
 }
 

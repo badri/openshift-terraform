@@ -7,11 +7,11 @@ output "node_domains" {
 }
 
 output "master_ip_address" {
-  value = "${aws_eip.master_eip.public_ip}"
+  value = "${aws_eip.master_eip.private_ip}"
 }
 
 output "node_ip_address" {
-  value = "${aws_eip.node_eips.*.public_ip}"
+  value = "${aws_eip.node_eips.*.private_ip}"
 }
 
 output "apps_subdomain" {

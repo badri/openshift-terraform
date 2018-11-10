@@ -27,7 +27,7 @@ variable "node_size" {
 }
 
 variable "nodes_count" {
-  default     = 2
+  default     = 1
 }
 
 

@@ -32,7 +32,7 @@ resource "aws_route53_record" "openshift-app-subdomain" {
   type = "CNAME"
   ttl  = 300
   records = [
-    "${var.domain}"
+    "${var.domain}" # should be console subdomain.domain
   ]
 }
 /*
