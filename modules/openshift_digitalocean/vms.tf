@@ -12,6 +12,7 @@ resource "digitalocean_droplet" "master" {
   ssh_keys   = ["${digitalocean_ssh_key.keypair.id}"]
   count      = 1
   volume_ids = ["${digitalocean_volume.master_volume.id}"]
+  private_networking = true
 }
 
 resource "digitalocean_droplet" "nodes" {

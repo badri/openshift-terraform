@@ -64,13 +64,13 @@ $ pip install -r requirements.txt
 Prerequisite check.
 
 ```
-$ ansible-playbook -i ../inventory.cfg playbooks/prerequisites.yml
+$ ansible-playbook -i ../inventory.cfg --private-key=~/.ssh/tf playbooks/prerequisites.yml
 ```
 
 Provision the cluster.
 
 ```
-$ ansible-playbook -i ../inventory.cfg playbooks/deploy_cluster.yml
+$ ansible-playbook -i ../inventory.cfg --private-key=~/.ssh/tf playbooks/deploy_cluster.yml
 ```
 
 ### Post install steps
@@ -79,7 +79,7 @@ Login to master node using,
 
 ```
 $ ssh -i ~/.ssh/tf root@console.example.com
-```
+````
 
 And to the nodes using,
 

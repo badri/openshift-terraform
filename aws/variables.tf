@@ -1,3 +1,8 @@
+variable "key_name" {
+  default = "openshift"
+  description = "The name of the key to user for ssh access, e.g: consul-cluster"
+}
+
 variable "public_key_path" {
   default = "~/.ssh/tf.pub"
   description = "The local public key path, e.g. ~/.ssh/id_rsa.pub"
@@ -9,29 +14,22 @@ variable "private_key_path" {
 }
 
 variable "region" {
-  default = "blr1"
-  description = "The digitalOcean region where the cluster will be spun."
+  default = "us-east-1"
+  description = "The AWS region where the cluster will be spun."
 }
 
 variable "master_size" {
-  default = "4gb"
-  description = "Size of the master VM"
+  default = "m5.xlarge"
 }
 
 variable "node_size" {
-  default = "4gb"
-  description = "Size of the Node VMs"
+  default = "m5.large"
 }
 
 variable "nodes_count" {
-  default = 2
-  description = "No. of app nodes to create."
+  default     = 1
 }
 
-variable "volume_size" {
-  default = 50
-  description = "Size of DO volumes in GB"
-}
 
 variable "domain" {
   default = "example.com"
