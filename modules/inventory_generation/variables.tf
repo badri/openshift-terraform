@@ -8,15 +8,21 @@ variable "node_ip_address" {type = "list"}
 
 variable "apps_subdomain" {}
 
-variable "access_key" {}
+variable "access_key" {
+  default = ""
+}
 
-variable "secret_key" {}
+variable "secret_key" {
+  default = ""
+}
 
 variable "use_gluster" {}
 
 variable "provider" {}
 
-variable "cluster_id" {}
+variable "cluster_id" {
+  default = ""
+}
 
 variable "private_key_path" {
   description = "The local private key path, e.g. ~/.ssh/id_rsa"
