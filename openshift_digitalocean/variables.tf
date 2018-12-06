@@ -2,8 +2,8 @@ variable "key_name" {
   description = "The name of the key to user for ssh access, e.g: consul-cluster"
 }
 
-variable "public_key_path" {
-  description = "The local public key path, e.g. ~/.ssh/id_rsa.pub"
+variable "public_key" {
+  description = "The public key str"
 }
 
 variable "image" {

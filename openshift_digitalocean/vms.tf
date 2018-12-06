@@ -1,7 +1,7 @@
 //  Create an SSH keypair
 resource "digitalocean_ssh_key" "keypair" {
   name       = "${var.key_name}"
-  public_key = "${file(var.public_key_path)}"
+  public_key = "${var.public_key}"
 }
 
 resource "digitalocean_droplet" "master" {
