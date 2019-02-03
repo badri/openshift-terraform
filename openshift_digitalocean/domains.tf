@@ -1,31 +1,33 @@
 // master domain
 
-resource "digitalocean_domain" "openshift_base" {
-  name       = "${var.domain}"
-  ip_address = "${digitalocean_droplet.master.ipv4_address}"
+resource "dnsimple_record" "openshift_base" {
+  domain  = "shapeblock.cloud"
+  value = "${digitalocean_droplet.master.ipv4_address}"
+  type = "A"
+  name = "${var.domain}"
 }
 
 // console url
-resource "digitalocean_record" "openshift_web_console" {
-  domain = "${digitalocean_domain.openshift_base.name}"
+resource "dnsimple_record" "openshift_web_console" {
+  domain = "${dnsimple_record.openshift_base.domain}"
   type   = "A"
-  name   = "console"
+  name   = "${format("console.%s", var.domain)}"
   value  = "${digitalocean_droplet.master.ipv4_address}"
 }
 
 // apps subdomains
-resource "digitalocean_record" "openshift_apps" {
-  domain = "${digitalocean_domain.openshift_base.name}"
+resource "dnsimple_record" "openshift_apps" {
+  domain = "${dnsimple_record.openshift_base.domain}"
   type   = "CNAME"
-  name   = "*.apps"
-  value  = "@"
+  name   = "${format("*.apps.%s", var.domain)}"
+  value  = "${format("%s.shapeblock.cloud", var.domain)}"
 }
 
 // node urls
-resource "digitalocean_record" "openshift_nodes" {
+resource "dnsimple_record" "openshift_nodes" {
   count  = "${var.nodes_count}"
-  domain = "${digitalocean_domain.openshift_base.name}"
+  domain = "${dnsimple_record.openshift_base.domain}"
   type   = "A"
-  name   = "${format("%s%02d", var.node_prefix, count.index + 1)}"
+  name   = "${format("%s%02d.%s", var.node_prefix, count.index + 1, var.domain)}"
   value  = "${element(digitalocean_droplet.nodes.*.ipv4_address, count.index)}"
 }
