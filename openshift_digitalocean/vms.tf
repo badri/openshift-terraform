@@ -6,7 +6,7 @@ resource "digitalocean_ssh_key" "keypair" {
 
 resource "digitalocean_droplet" "master" {
   image      = "${var.image}"
-  name       = "${format("shapeblock-%s-%s", var.domain, var.master_hostname)}"
+  name       = "${var.master_hostname}"
   region     = "${var.region}"
   size       = "${var.master_size}"
   ssh_keys   = ["${digitalocean_ssh_key.keypair.id}"]
@@ -17,7 +17,7 @@ resource "digitalocean_droplet" "master" {
 
 resource "digitalocean_droplet" "nodes" {
   image      = "${var.image}"
-  name       = "${format("%s%02d.%s", var.node_prefix, count.index + 1, var.domain)}"
+  name       = "$${format("%s%02d", var.node_prefix, count.index + 1)}"
   region     = "${var.region}"
   size       = "${var.node_size}"
   ssh_keys   = ["${digitalocean_ssh_key.keypair.id}"]

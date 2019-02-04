@@ -3,7 +3,7 @@ output "master_domain" {
 }
 
 output "node_domains" {
-  value = "${formatlist("%s.shapeblock.cloud", digitalocean_droplet.nodes.*.name)}"
+  value = "${formatlist("%s.%s.shapeblock.cloud", digitalocean_droplet.nodes.*.name, var.domain)}"
 }
 
 output "master_ip_address" {
