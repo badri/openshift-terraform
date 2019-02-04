@@ -17,7 +17,7 @@ resource "digitalocean_droplet" "master" {
 
 resource "digitalocean_droplet" "nodes" {
   image      = "${var.image}"
-  name       = "${format("shapeblock-%s-%s%02d", var.domain, var.node_prefix, count.index + 1)}"
+  name       = "${format("%s%02d.%s", var.node_prefix, count.index + 1, var.domain)}"
   region     = "${var.region}"
   size       = "${var.node_size}"
   ssh_keys   = ["${digitalocean_ssh_key.keypair.id}"]
