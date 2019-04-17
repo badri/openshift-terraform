@@ -4,6 +4,10 @@ resource "digitalocean_ssh_key" "keypair" {
   public_key = "${var.public_key}"
 }
 
+resource "digitalocean_tag" "cluster" {
+  name = "${var.domain}"
+}
+
 resource "digitalocean_droplet" "master" {
   image      = "${var.image}"
   name       = "${var.master_hostname}"
@@ -13,6 +17,7 @@ resource "digitalocean_droplet" "master" {
   count      = 1
   volume_ids = ["${digitalocean_volume.master_volume.id}"]
   private_networking = true
+  tags = ["${digitalocean_tag.cluster.name}"]
 }
 
 resource "digitalocean_droplet" "nodes" {
@@ -23,4 +28,5 @@ resource "digitalocean_droplet" "nodes" {
   ssh_keys   = ["${digitalocean_ssh_key.keypair.id}"]
   count      = "${var.nodes_count}"
   volume_ids = ["${element(digitalocean_volume.node_volumes.*.id, count.index)}"]
+  tags = ["${digitalocean_tag.cluster.name}"]
 }
