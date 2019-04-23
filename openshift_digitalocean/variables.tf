@@ -18,27 +18,32 @@ variable "master_hostname" {
 
 variable "region" {
   description = "The region where the cluster will be spun"
-  default     = "blr1"
+  default     = "tor1"
 }
 
 variable "master_size" {
   description = "Size of the master"
-  default     = "4gb"
+  default     = "8gb"
 }
 
-variable "node_size" {
+variable "node_sizes" {
   description = "Size of the nodes"
-  default     = "4gb"
+  default     = ["4gb", "4gb"]
 }
 
-variable "nodes_count" {
-  description = "No. of nodes"
-  default     = 2
+variable "node_regions" {
+  description = "The region where the nodes will be created"
+  default     = ["tor1", "tor1"]
+}
+
+variable "node_volume_sizes" {
+  description = "Size of nodes' DO volumes in GB"
+  default     = [50, 50]
 }
 
 variable "volume_size" {
   description = "Size of DO volumes in GB"
-  default     = 100
+  default     = 50
 }
 
 variable "domain" {

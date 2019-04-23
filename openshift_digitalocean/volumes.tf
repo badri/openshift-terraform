@@ -7,8 +7,8 @@ resource "digitalocean_volume" "master_volume" {
 }
 
 resource "digitalocean_volume" "node_volumes" {
-  region = "${var.region}"
+  region = "${var.node_regions[count.index]}"
   name   = "${format("shapeblock-%s-%s%02d-glusterfs", var.domain, var.node_prefix, count.index + 1)}"
-  size   = "${var.volume_size}"
-  count  = "${var.nodes_count}"
+  size   = "${var.node_volume_sizes[count.index]}"
+  count  = "${length(var.node_volume_sizes)}"
 }

@@ -1,10 +1,10 @@
 // master domain
 
 resource "dnsimple_record" "openshift_base" {
-  domain  = "shapeblock.cloud"
-  value = "${digitalocean_droplet.master.ipv4_address}"
-  type = "A"
-  name = "${var.domain}"
+  domain = "shapeblock.cloud"
+  value  = "${digitalocean_droplet.master.ipv4_address}"
+  type   = "A"
+  name   = "${var.domain}"
 }
 
 // console url
@@ -25,7 +25,7 @@ resource "dnsimple_record" "openshift_apps" {
 
 // node urls
 resource "dnsimple_record" "openshift_nodes" {
-  count  = "${var.nodes_count}"
+  count  = "${length(var.node_sizes)}"
   domain = "${dnsimple_record.openshift_base.domain}"
   type   = "A"
   name   = "${format("%s%02d.%s", var.node_prefix, count.index + 1, var.domain)}"

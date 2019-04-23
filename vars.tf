@@ -4,9 +4,11 @@ variable "region" {}
 
 variable "master_size" {}
 
-variable "node_size" {}
+variable "node_sizes" {  type = "list"}
 
-variable "nodes_count" {}
+variable "node_regions" {  type = "list"}
+
+variable "node_volume_sizes" {type = "list"}
 
 variable "volume_size" {}
 
