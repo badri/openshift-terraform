@@ -20,7 +20,7 @@ resource "dnsimple_record" "openshift_apps" {
   domain = "${dnsimple_record.openshift_base.domain}"
   type   = "CNAME"
   name   = "${format("*.apps.%s", var.domain)}"
-  value  = "${format("%s.shapeblock.cloud", var.domain)}"
+  value  = "${format("node-01.%s.shapeblock.cloud", var.domain)}"
 }
 
 // node urls
