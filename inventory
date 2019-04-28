@@ -1,0 +1,67 @@
+[OSEv3:children]
+masters
+nodes
+etcd
+glusterfs
+new_nodes
+
+[masters]
+console.aws-1.shapeblock.cloud openshift_schedulable=true
+
+[etcd]
+console.aws-1.shapeblock.cloud
+
+[nodes]
+console.aws-1.shapeblock.cloud openshift_schedulable=true openshift_node_group_name='node-config-master'
+
+
+node-01.aws-1.shapeblock.cloud openshift_schedulable=true openshift_node_group_name='node-config-infra'
+
+
+
+node-02.aws-1.shapeblock.cloud openshift_schedulable=true openshift_node_group_name='node-config-compute'
+
+
+
+
+[glusterfs]
+console.aws-1.shapeblock.cloud glusterfs_devices='[ "/dev/xvdg" ]'
+
+node-01.aws-1.shapeblock.cloud glusterfs_devices='[ "/dev/xvdg" ]'
+
+node-02.aws-1.shapeblock.cloud glusterfs_devices='[ "/dev/xvdg" ]'
+
+
+
+[new_nodes]
+
+
+
+[OSEv3:vars]
+debug_level=4
+
+ansible_ssh_user=centos
+ansible_become=true
+
+openshift_enable_service_catalog=False
+ansible_service_broker_install=False
+
+os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
+openshift_disable_check=disk_availability,docker_storage,memory_availability,docker_image_availability
+
+deployment_type=origin
+openshift_deployment_type=origin
+
+openshift_release="3.11"
+
+openshift_additional_repos=[{'id': 'centos-okd-ci', 'name': 'centos-okd-ci', 'baseurl' :'http://buildlogs.centos.org/centos/7/paas/x86_64/openshift-origin311/', 'gpgcheck' :'0', 'enabled' :'1'}]
+
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
+
+
+openshift_master_htpasswd_users={'admin': '$2y$12$wrLrA6a2FXzWQb/oXVpn2u6y.6/bzpyQr6ajwUOZFIvrrsUipxxoG'}
+
+openshift_public_hostname=console.aws-1.shapeblock.cloud
+openshift_master_default_subdomain=apps.aws-1.shapeblock.cloud
+
+openshift_cluster_monitoring_operator_install=false
