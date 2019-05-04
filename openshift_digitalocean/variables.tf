@@ -8,7 +8,7 @@ variable "public_key" {
 
 variable "image" {
   description = "The base OS used for installation."
-  default     = "centos-7-x64"
+  default     = "fedora-28-x64-atomic"
 }
 
 variable "master_hostname" {
