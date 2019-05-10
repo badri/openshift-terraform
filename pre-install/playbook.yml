@@ -35,16 +35,6 @@
         enabled: yes
         name: NetworkManager
 
-    - name: Stop iptables service
-      systemd:
-        state: stopped
-        name: iptables
-
-    - name: Disable iptables service
-      systemd:
-        enabled: no
-        name: iptables
-
     - name: Start FirewallD service
       systemd:
         state: started
