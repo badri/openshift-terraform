@@ -1,0 +1,15 @@
+public_key = "ssh-rsa AAAAXXXX"
+
+region = "us-west-2"
+
+master_size = "t3.large"
+
+node_sizes = ["t3.medium", "t3.medium", "t3.medium"]
+
+domain = "aws-ebs"
+
+key_name = "aws-ebs"
+
+cluster_name = "aws-ebs"
+
+cluster_id = "aws-ebs"

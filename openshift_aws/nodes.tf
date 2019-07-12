@@ -31,27 +31,12 @@ resource "aws_instance" "master" {
     volume_type = "gp2"
   }
 
-  # Storage for Docker, see:
-  # https://docs.openshift.org/latest/install_config/install/host_preparation.html#configuring-docker-storage
-  ebs_block_device {
-    device_name = "/dev/sdf"
-    volume_size = 80
-    volume_type = "gp2"
-  }
-
-  # This is for GlusterFS
-  ebs_block_device {
-    device_name = "/dev/sdg"
-    volume_size = "${var.volume_size}"
-    volume_type = "gp2"
-  }
-
   key_name = "${aws_key_pair.keypair.key_name}"
 
   tags = "${merge(
     local.common_tags,
     map(
-      "Name", "OpenShift Master"
+      "Name", "openShift-master"
     )
   )}"
 }
@@ -79,21 +64,6 @@ resource "aws_instance" "nodes" {
   //  We need at least 30GB for OpenShift, let's be greedy...
   root_block_device {
     volume_size = 50
-    volume_type = "gp2"
-  }
-
-  # Storage for Docker, see:
-  # https://docs.openshift.org/latest/install_config/install/host_preparation.html#configuring-docker-storage
-  ebs_block_device {
-    device_name = "/dev/sdf"
-    volume_size = 80
-    volume_type = "gp2"
-  }
-
-  # This is for GlusterFS
-  ebs_block_device {
-    device_name = "/dev/sdg"
-    volume_size = "${var.node_volume_sizes[count.index]}"
     volume_type = "gp2"
   }
 

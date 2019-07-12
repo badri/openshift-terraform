@@ -2,66 +2,50 @@
 masters
 nodes
 etcd
-glusterfs
 new_nodes
 
 [masters]
-console.aws-1.shapeblock.cloud openshift_schedulable=true
+console.aws-ebs.shapeblock.cloud
 
 [etcd]
-console.aws-1.shapeblock.cloud
+console.aws-ebs.shapeblock.cloud
 
 [nodes]
-console.aws-1.shapeblock.cloud openshift_schedulable=true openshift_node_group_name='node-config-master'
-
-
-node-01.aws-1.shapeblock.cloud openshift_schedulable=true openshift_node_group_name='node-config-infra'
-
-
-
-node-02.aws-1.shapeblock.cloud openshift_schedulable=true openshift_node_group_name='node-config-compute'
-
-
-
-
-[glusterfs]
-console.aws-1.shapeblock.cloud glusterfs_devices='[ "/dev/xvdg" ]'
-
-node-01.aws-1.shapeblock.cloud glusterfs_devices='[ "/dev/xvdg" ]'
-
-node-02.aws-1.shapeblock.cloud glusterfs_devices='[ "/dev/xvdg" ]'
-
+console.aws-ebs.shapeblock.cloud openshift_schedulable=true openshift_node_group_name='node-config-all-in-one'
+node-01.aws-ebs.shapeblock.cloud openshift_schedulable=true openshift_node_group_name='node-config-compute'
+node-02.aws-ebs.shapeblock.cloud openshift_schedulable=true openshift_node_group_name='node-config-compute'
+node-03.aws-ebs.shapeblock.cloud openshift_schedulable=true openshift_node_group_name='node-config-compute'
 
 
 [new_nodes]
 
-
-
 [OSEv3:vars]
-debug_level=4
 
+# AWS stuff
+openshift_cloudprovider_kind=aws
+openshift_clusterid=dev-sb
+openshift_cloudprovider_aws_access_key="{{ lookup('env','AWS_ACCESS_KEY_ID') }}"
+openshift_cloudprovider_aws_secret_key="{{ lookup('env','AWS_SECRET_ACCESS_KEY') }}"
+
+#debug_level=4
 ansible_ssh_user=centos
 ansible_become=true
+ansible_ssh_private_key=/home/lakshminp/os/openshift-ansible/sb-key
 
 openshift_enable_service_catalog=False
 ansible_service_broker_install=False
+openshift_cluster_monitoring_operator_install=False
 
-os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
-openshift_disable_check=disk_availability,docker_storage,memory_availability,docker_image_availability
-
-deployment_type=origin
 openshift_deployment_type=origin
-
 openshift_release="3.11"
 
 openshift_additional_repos=[{'id': 'centos-okd-ci', 'name': 'centos-okd-ci', 'baseurl' :'http://buildlogs.centos.org/centos/7/paas/x86_64/openshift-origin311/', 'gpgcheck' :'0', 'enabled' :'1'}]
+os_firewall_use_firewalld=True
+
+openshift_public_hostname=console.aws-ebs.shapeblock.cloud
+openshift_master_default_subdomain=apps.aws-ebs.shapeblock.cloud
 
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
+openshift_master_htpasswd_users={'admin': 'XXX'}
 
-
-openshift_master_htpasswd_users={'admin': '$2y$12$wrLrA6a2FXzWQb/oXVpn2u6y.6/bzpyQr6ajwUOZFIvrrsUipxxoG'}
-
-openshift_public_hostname=console.aws-1.shapeblock.cloud
-openshift_master_default_subdomain=apps.aws-1.shapeblock.cloud
-
-openshift_cluster_monitoring_operator_install=false
+openshift_disable_check=memory_availability

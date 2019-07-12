@@ -44,16 +44,6 @@ variable "node_sizes" {
   default     = ["m5.large", "m5.large"]
 }
 
-variable "node_regions" {
-  description = "The region where the nodes will be created"
-  default     = ["us-east-1", "us-east-1"]
-}
-
-variable "node_volume_sizes" {
-  description = "Size of nodes' DO volumes in GB"
-  default     = [50, 50]
-}
-
 variable "node_prefix" {
   default = "node-"
 }
@@ -79,9 +69,4 @@ variable "cluster_name" {
 
 variable "cluster_id" {
   description = "ID of the cluster, e.g: 'openshift-cluster-us-east-1'. Useful when running multiple clusters in the same AWS account."
-}
-
-variable "volume_size" {
-  description = "Size of EBS volumes in GB"
-  default     = 50
 }
