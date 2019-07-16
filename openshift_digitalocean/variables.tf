@@ -28,22 +28,14 @@ variable "master_size" {
 
 variable "node_sizes" {
   description = "Size of the nodes"
-  default     = ["4gb", "4gb"]
+  default     = []
+  type = "list"
 }
 
 variable "node_regions" {
   description = "The region where the nodes will be created"
-  default     = ["tor1", "tor1"]
-}
-
-variable "node_volume_sizes" {
-  description = "Size of nodes' DO volumes in GB"
-  default     = [50, 50]
-}
-
-variable "volume_size" {
-  description = "Size of DO volumes in GB"
-  default     = 50
+  default     = []
+  type = "list"
 }
 
 variable "domain" {

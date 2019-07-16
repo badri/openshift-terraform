@@ -15,7 +15,6 @@ resource "digitalocean_droplet" "master" {
   size               = "${var.master_size}"
   ssh_keys           = ["${digitalocean_ssh_key.keypair.id}"]
   count              = 1
-  volume_ids         = ["${digitalocean_volume.master_volume.id}"]
   private_networking = true
   tags               = ["${digitalocean_tag.cluster.name}"]
 }
@@ -27,6 +26,5 @@ resource "digitalocean_droplet" "nodes" {
   size       = "${var.node_sizes[count.index]}"
   ssh_keys   = ["${digitalocean_ssh_key.keypair.id}"]
   count      = "${length(var.node_sizes)}"
-  volume_ids = ["${element(digitalocean_volume.node_volumes.*.id, count.index)}"]
   tags       = ["${digitalocean_tag.cluster.name}"]
 }
