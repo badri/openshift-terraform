@@ -10,7 +10,7 @@ resource "digitalocean_tag" "cluster" {
 
 resource "digitalocean_droplet" "master" {
   image              = "${var.image}"
-  name               = "${var.master_hostname}"
+  name               = "${format("%s.%s.shapeblock.cloud", var.console_subdomain, var.domain)}"
   region             = "${var.region}"
   size               = "${var.master_size}"
   ssh_keys           = ["${digitalocean_ssh_key.keypair.id}"]
@@ -22,7 +22,7 @@ resource "digitalocean_droplet" "master" {
 
 resource "digitalocean_droplet" "nodes" {
   image      = "${var.image}"
-  name       = "${format("%s%02d", var.node_prefix, count.index + 1)}"
+  name       = "${format("%s%02d.%s.shapeblock.cloud", var.node_prefix, count.index + 1, var.domain)}"
   region     = "${var.node_regions[count.index]}"
   size       = "${var.node_sizes[count.index]}"
   ssh_keys   = ["${digitalocean_ssh_key.keypair.id}"]
