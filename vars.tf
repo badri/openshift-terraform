@@ -1,17 +1,26 @@
-variable "public_key" {}
+variable "public_key" {
+}
 
-variable "region" {}
+variable "region" {
+}
 
-variable "master_size" {}
+variable "master_size" {
+}
 
-variable "node_sizes" {  type = "list"}
+variable "node_sizes" {
+  type = list(string)
+}
 
-variable "node_regions" {  type = "list"}
+variable "node_volume_sizes" {
+  type = list(string)
+}
 
-variable "node_volume_sizes" {type = "list"}
+variable "volume_size" {
+}
 
-variable "volume_size" {}
+variable "domain" {
+}
 
-variable "domain" {}
+variable "key_name" {
+}
 
-variable "key_name" {}

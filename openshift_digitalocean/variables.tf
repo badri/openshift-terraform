@@ -31,11 +31,6 @@ variable "node_sizes" {
   default     = ["4gb", "4gb"]
 }
 
-variable "node_regions" {
-  description = "The region where the nodes will be created"
-  default     = ["tor1", "tor1"]
-}
-
 variable "node_volume_sizes" {
   description = "Size of nodes' DO volumes in GB"
   default     = [50, 50]
@@ -64,3 +59,4 @@ variable "apps_subdomain" {
 variable "node_prefix" {
   default = "node-"
 }
+
