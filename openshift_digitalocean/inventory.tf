@@ -9,14 +9,14 @@ data "template_file" "inventory" {
   vars = {
     public_hostname   = "console.${var.domain}.shapeblock.cloud"
     default_subdomain = "apps.${var.domain}.shapeblock.cloud"
-    master_hostname  = digitalocean_droplet.master.0.ipv4_address_private
-    infra_hostname   = digitalocean_droplet.nodes.0.ipv4_address_private
+    master_hostname  = digitalocean_droplet.master.0.ipv4_address
+    infra_hostname   = digitalocean_droplet.nodes.0.ipv4_address
     bcrypt_passwd = bcrypt(random_password.admin_password.result)
     compute_nodes = join(
       "\n",
       formatlist(
         "%s openshift_schedulable=true openshift_node_group_name='node-config-compute'",
-        slice(digitalocean_droplet.nodes.*.ipv4_address_private, 1, length(var.node_sizes)),
+        slice(digitalocean_droplet.nodes.*.ipv4_address, 1, length(var.node_sizes)),
       ),
     )
   }

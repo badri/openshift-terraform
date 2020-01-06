@@ -35,18 +35,21 @@ resource "digitalocean_droplet" "nodes" {
   volume_ids = [element(digitalocean_volume.node_volumes.*.id, count.index)]
   // TODO: add a tag for infra
   tags       = [digitalocean_tag.cluster.name]
+  private_networking = true
 }
+// we don't need the bastion setup at all in DO.
 
+/*
 resource "digitalocean_droplet" "bastion" {
-  image              = var.image
+  image              = "docker-18-04"
   name               = format("bastion.%s.shapeblock.cloud", var.domain)
   region             = var.region
   size               = "s-1vcpu-1gb"
   ssh_keys           = [digitalocean_ssh_key.keypair.id]
-  private_networking = true
   tags               = [digitalocean_tag.cluster.name]
+  private_networking = true
 }
-
+*/
 
 // TODO: firewall 1 - only for OKD masters and nodes
 // TODO: firewall 2 - for bastion only
