@@ -1,17 +1,25 @@
-variable "public_key" {}
-
-variable "region" {}
-
-variable "master_size" {}
-
-variable "node_sizes" {
-  type = "list"
+variable "public_key" {
 }
 
-variable "domain" {}
+variable "region" {
+}
 
-variable "key_name" {}
+variable "master_size" {
+}
 
-variable "cluster_name" {}
+variable "node_sizes" {
+  type = list(string)
+}
 
-variable "cluster_id" {}
+variable "domain" {
+}
+
+variable "key_name" {
+}
+
+variable "cluster_name" {
+}
+
+variable "cluster_id" {
+}
+

@@ -20,7 +20,7 @@ variable "subnet_cidr" {
 }
 
 variable "subnetaz" {
-  type = "map"
+  type = map(string)
 
   default = {
     us-east-1      = "us-east-1a"
@@ -53,16 +53,6 @@ variable "domain" {
   description = "Base domain name for the Openshift cluster."
 }
 
-// console.example.com
-variable "console_subdomain" {
-  default = "console"
-}
-
-// *.apps.example.com
-variable "apps_subdomain" {
-  default = "apps"
-}
-
 variable "cluster_name" {
   description = "Name of the cluster, e.g: 'openshift-cluster'. Useful when running multiple clusters in the same AWS account."
 }
@@ -70,3 +60,4 @@ variable "cluster_name" {
 variable "cluster_id" {
   description = "ID of the cluster, e.g: 'openshift-cluster-us-east-1'. Useful when running multiple clusters in the same AWS account."
 }
+

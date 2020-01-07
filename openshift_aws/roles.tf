@@ -16,6 +16,7 @@ resource "aws_iam_role" "openshift-instance-role" {
     ]
 }
 EOF
+
 }
 
 resource "aws_iam_user" "openshift-aws-user" {
@@ -24,7 +25,7 @@ resource "aws_iam_user" "openshift-aws-user" {
 
 resource "aws_iam_user_policy" "openshift-aws-user" {
   name = "openshift-aws-user-policy"
-  user = "${aws_iam_user.openshift-aws-user.name}"
+  user = aws_iam_user.openshift-aws-user.name
 
   policy = <<EOF
 {
@@ -61,13 +62,20 @@ resource "aws_iam_user_policy" "openshift-aws-user" {
   ]
 }
 EOF
+
+}
+
+resource "aws_iam_instance_profile" "bastion-instance-profile" {
+  name  = "bastion-instance-profile"
+  role = aws_iam_role.openshift-instance-role.name
 }
 
 resource "aws_iam_access_key" "openshift-aws-user" {
-  user = "${aws_iam_user.openshift-aws-user.name}"
+  user = aws_iam_user.openshift-aws-user.name
 }
 
 resource "aws_iam_instance_profile" "openshift-instance-profile" {
   name = "openshift-instance-profile"
-  role = "${aws_iam_role.openshift-instance-role.name}"
+  role = aws_iam_role.openshift-instance-role.name
 }
+

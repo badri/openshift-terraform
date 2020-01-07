@@ -1,7 +1,7 @@
 resource "aws_security_group" "openshift-vpc" {
   name        = "openshift-vpc"
   description = "Default security group that allows all instances in the VPC to talk to each other over any port and protocol."
-  vpc_id      = "${aws_vpc.openshift.id}"
+  vpc_id      = aws_vpc.openshift.id
 
   ingress {
     from_port = "0"
@@ -21,7 +21,7 @@ resource "aws_security_group" "openshift-vpc" {
 resource "aws_security_group" "openshift-public-ingress" {
   name        = "openshift-public-ingress"
   description = "Security group that allows public ingress to instances, HTTP, HTTPS and more."
-  vpc_id      = "${aws_vpc.openshift.id}"
+  vpc_id      = aws_vpc.openshift.id
 
   //  HTTP
   ingress {
@@ -54,13 +54,6 @@ resource "aws_security_group" "openshift-public-ingress" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 }
 
 //  This security group allows public egress from the instances for HTTP and
@@ -68,7 +61,7 @@ resource "aws_security_group" "openshift-public-ingress" {
 resource "aws_security_group" "openshift-public-egress" {
   name        = "openshift-public-egress"
   description = "Security group that allows egress to the internet for instances over HTTP and HTTPS."
-  vpc_id      = "${aws_vpc.openshift.id}"
+  vpc_id      = aws_vpc.openshift.id
 
   //  HTTP
   egress {
@@ -85,4 +78,26 @@ resource "aws_security_group" "openshift-public-egress" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+resource "aws_security_group" "openshift-ssh" {
+  name        = "openshift-ssh"
+  description = "Security group that allows public ingress over SSH."
+  vpc_id      = aws_vpc.openshift.id
+
+  //  SSH
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  //  Use our common tags and add a specific name.
+  tags = merge(
+    local.common_tags,
+    map(
+      "Name", "OpenShift SSH Access"
+    )
+  )
 }
