@@ -16,6 +16,13 @@ resource "aws_security_group" "openshift-vpc" {
     protocol  = "-1"
     self      = true
   }
+  //  Allow SSH from SB instances
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["178.128.226.224/32"]
+  }  
 }
 
 resource "aws_security_group" "openshift-public-ingress" {

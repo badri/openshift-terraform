@@ -7,15 +7,15 @@ data "template_file" "inventory" {
     secret_key        = aws_iam_access_key.openshift-aws-user.secret
     public_hostname   = "console.${var.domain}.shapeblock.cloud"
     default_subdomain = "apps.${var.domain}.shapeblock.cloud"
-    master_inventory  = aws_instance.master.private_dns
-    master_hostname   = aws_instance.master.private_dns
-    infra_hostname   = aws_instance.nodes.0.private_dns
+    master_inventory  = aws_instance.master.public_dns
+    master_hostname   = aws_instance.master.public_dns
+    infra_hostname   = aws_instance.nodes.0.public_dns
     // TODO: add 1st node as infra node
     nodes = join(
       "\n",
       formatlist(
         "%s  openshift_node_group_name='node-config-compute' openshift_schedulable=true",
-        slice(aws_instance.nodes.*.private_dns, 1, length(var.node_sizes)),
+        slice(aws_instance.nodes.*.public_dns, 1, length(var.node_sizes)),
       ),
     )
     cluster_id = var.cluster_id
