@@ -7,6 +7,9 @@ variable "region" {
 variable "master_size" {
 }
 
+variable "infra_size" {
+}
+
 variable "node_sizes" {
   type = list(string)
 }
@@ -21,5 +24,8 @@ variable "cluster_name" {
 }
 
 variable "cluster_id" {
+}
+
+variable "permitted_ip" {
 }
 

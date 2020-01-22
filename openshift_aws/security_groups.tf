@@ -21,7 +21,7 @@ resource "aws_security_group" "openshift-vpc" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["178.128.226.224/32"]
+    cidr_blocks = ["${var.permitted_ip}/32"]
   }  
 }
 

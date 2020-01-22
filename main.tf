@@ -16,8 +16,6 @@ module "openshift_aws" {
   domain       = var.domain
   cluster_name = var.cluster_name
   cluster_id   = var.cluster_id
-}
-
-output "bastion_ip_address" {
-  value = module.openshift_aws.bastion_ip_address
+  permitted_ip = var.permitted_ip
+  infra_size  = var.infra_size
 }

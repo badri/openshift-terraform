@@ -7,9 +7,5 @@ output "master_ip_address" {
 }
 
 output "apps_subdomain" {
-  value = format("*.apps.%s.shapeblock.cloud", var.domain)
-}
-
-output "bastion_ip_address" {
-  value = aws_eip.bastion_eip.public_ip
+  value = format("apps.%s.shapeblock.cloud", var.domain)
 }

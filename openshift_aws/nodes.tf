@@ -13,14 +13,13 @@ resource "aws_eip" "master_eip" {
 
 // infra node
 resource "aws_eip" "infra_eip" {
-  instance = aws_instance.nodes.0.id
+  instance = aws_instance.infra.id
   vpc      = true
 }
 
 resource "aws_instance" "master" {
   ami = data.aws_ami.centos_7_x64.id
 
-  # Master nodes require at least 16GB of memory.
   instance_type        = var.master_size
   subnet_id            = aws_subnet.public-subnet.id
   iam_instance_profile = aws_iam_instance_profile.openshift-instance-profile.id
@@ -31,7 +30,6 @@ resource "aws_instance" "master" {
     aws_security_group.openshift-public-egress.id,
   ]
 
-  //  We need at least 30GB for OpenShift, let's be greedy...
   root_block_device {
     volume_size = 50
     volume_type = "gp2"
@@ -46,6 +44,36 @@ resource "aws_instance" "master" {
     },
   )
 }
+
+
+resource "aws_instance" "infra" {
+  ami = data.aws_ami.centos_7_x64.id
+
+  instance_type        = var.infra_size
+  subnet_id            = aws_subnet.public-subnet.id
+  iam_instance_profile = aws_iam_instance_profile.openshift-instance-profile.id
+
+  vpc_security_group_ids = [
+    aws_security_group.openshift-vpc.id,
+    aws_security_group.openshift-public-ingress.id,
+    aws_security_group.openshift-public-egress.id,
+  ]
+
+  root_block_device {
+    volume_size = 50
+    volume_type = "gp2"
+  }
+
+  key_name = aws_key_pair.keypair.key_name
+
+  tags = merge(
+    local.common_tags,
+    {
+      "Name" = "openShift-infra"
+    },
+  )
+}
+
 
 // nodes
 resource "aws_instance" "nodes" {

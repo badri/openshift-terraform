@@ -39,13 +39,20 @@ variable "master_size" {
   description = "Size of the master VM"
 }
 
-variable "node_sizes" {
-  description = "Size of the nodes"
-  default     = ["m5.large", "m5.large"]
+
+variable "infra_size" {
+  default     = "m5.xlarge"
+  description = "Size of the master VM"
 }
 
 variable "node_prefix" {
   default = "node-"
+}
+
+
+variable "node_sizes" {
+  description = "list of Worker nodes."
+  default     = ["m5.large"]
 }
 
 variable "domain" {
@@ -61,3 +68,6 @@ variable "cluster_id" {
   description = "ID of the cluster, e.g: 'openshift-cluster-us-east-1'. Useful when running multiple clusters in the same AWS account."
 }
 
+variable "permitted_ip" {
+  description = "IP which has SSH access to cluster nodes."
+}
