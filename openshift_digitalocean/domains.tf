@@ -36,6 +36,11 @@ resource "dnsimple_record" "openshift_nodes" {
   count  = length(var.node_sizes)
   domain =  "shapeblock.cloud"
   type   = "A"
-  name   = element(digitalocean_droplet.nodes.*.name, count.index)
+  name   = format(
+    "%s%02d.%s",
+    var.node_prefix,
+    count.index + 1,
+    var.domain,
+  )
   value  = element(digitalocean_droplet.nodes.*.ipv4_address, count.index)
 }
