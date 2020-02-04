@@ -7,6 +7,9 @@ variable "region" {
 variable "master_size" {
 }
 
+variable "infra_size" {
+}
+
 variable "node_sizes" {
   type = list(string)
 }

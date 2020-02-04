@@ -6,6 +6,12 @@ resource "digitalocean_volume" "master_volume" {
   size   = var.volume_size
 }
 
+resource "digitalocean_volume" "infra_volume" {
+  region = var.region
+  name   = format("shapeblock-%s-infra-glusterfs", var.domain)
+  size   = var.volume_size
+}
+
 resource "digitalocean_volume" "node_volumes" {
   region = var.region
   name = format(

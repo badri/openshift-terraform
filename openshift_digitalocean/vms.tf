@@ -20,6 +20,18 @@ resource "digitalocean_droplet" "master" {
   tags               = [digitalocean_tag.cluster.name]
 }
 
+resource "digitalocean_droplet" "infra" {
+  image              = var.image
+  name               = format("infra.%s.shapeblock.cloud", var.domain)
+  region             = var.region
+  size               = var.infra_size
+  ssh_keys           = [digitalocean_ssh_key.keypair.id]
+  count              = 1
+  volume_ids         = [digitalocean_volume.infra_volume.id]
+  private_networking = true
+  tags               = [digitalocean_tag.cluster.name]
+}
+
 resource "digitalocean_droplet" "nodes" {
   image = var.image
   name = format(
@@ -33,7 +45,6 @@ resource "digitalocean_droplet" "nodes" {
   ssh_keys   = [digitalocean_ssh_key.keypair.id]
   count      = length(var.node_sizes)
   volume_ids = [element(digitalocean_volume.node_volumes.*.id, count.index)]
-  // TODO: add a tag for infra
   tags       = [digitalocean_tag.cluster.name]
   private_networking = true
 }

@@ -28,5 +28,5 @@ resource "dnsimple_record" "openshift_nodes" {
   domain = dnsimple_record.openshift_base.domain
   type   = "A"
   name   = var.domain
-  value  = digitalocean_droplet.nodes.0.ipv4_address
+  value  = digitalocean_droplet.infra[0].ipv4_address
 }

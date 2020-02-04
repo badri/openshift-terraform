@@ -8,5 +8,6 @@ module "openshift_digitalocean" {
   node_volume_sizes = var.node_volume_sizes
   volume_size       = var.volume_size
   domain            = var.domain
+  infra_size  = var.infra_size
 }
 
