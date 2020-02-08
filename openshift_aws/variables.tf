@@ -25,12 +25,15 @@ variable "subnetaz" {
   default = {
     us-east-1      = "us-east-1a"
     us-east-2      = "us-east-2a"
-    us-west-1      = "us-west-1a"
+    us-west-1      = "us-west-1c"
     us-west-2      = "us-west-2a"
     eu-west-1      = "eu-west-1a"
     eu-west-2      = "eu-west-2a"
+    eu-west-3      = "eu-west-3a"
     eu-central-1   = "eu-central-1a"
     ap-southeast-1 = "ap-southeast-1a"
+    ap-south-1 = "ap-south-1a"
+    sa-east-1 = "sa-east-1a"
   }
 }
 
