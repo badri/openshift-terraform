@@ -1,7 +1,7 @@
 data "aws_ami" "centos_7_x64" {
   most_recent = true
 
-  owners = ["679593333241"] // Centos account ID
+  owners = ["aws-marketplace"] // Centos account ID
 
   filter {
     name   = "architecture"
@@ -9,13 +9,14 @@ data "aws_ami" "centos_7_x64" {
   }
 
   filter {
-    name   = "root-device-type"
-    values = ["ebs"]
+    name   = "product-code"
+    values = ["aw0evgkw8e5c1q413zgy5pjce"]
   }
 
+  
   filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
+    name   = "root-device-type"
+    values = ["ebs"]
   }
 
   filter {
