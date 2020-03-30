@@ -23,17 +23,17 @@ variable "region" {
 
 variable "master_size" {
   description = "Size of the master"
-  default     = "s-2vcpu-4gb"
+  default     = "s-4vcpu-8gb"
 }
 
 variable "infra_size" {
-  default     = "s-2vcpu-4gb"
+  default     = null
   description = "Size of the infra VM"
 }
 
 variable "node_sizes" {
   description = "Size of the nodes"
-  default     = ["s-2vcpu-4gb"]
+  default     = []
 }
 
 variable "node_volume_sizes" {

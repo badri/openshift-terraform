@@ -18,18 +18,20 @@ resource "digitalocean_droplet" "master" {
   volume_ids         = [digitalocean_volume.master_volume.id]
   private_networking = true
   tags               = [digitalocean_tag.cluster.name]
+  monitoring         = true
 }
 
 resource "digitalocean_droplet" "infra" {
   image              = var.image
   name               = format("infra.%s.shapeblock.cloud", var.domain)
   region             = var.region
-  size               = var.infra_size
+  size               = var.infra_size != null ? var.infra_size : ""
   ssh_keys           = [digitalocean_ssh_key.keypair.id]
-  count              = 1
-  volume_ids         = [digitalocean_volume.infra_volume.id]
+  volume_ids         = [digitalocean_volume.infra_volume[0].id]
   private_networking = true
   tags               = [digitalocean_tag.cluster.name]
+  count              = var.infra_size != null ? 1 : 0
+  monitoring         = true
 }
 
 resource "digitalocean_droplet" "nodes" {
@@ -40,11 +42,11 @@ resource "digitalocean_droplet" "nodes" {
     count.index + 1,
     var.domain,
   )
-  region     = var.region
-  size       = var.node_sizes[count.index]
-  ssh_keys   = [digitalocean_ssh_key.keypair.id]
-  count      = length(var.node_sizes)
-  volume_ids = [element(digitalocean_volume.node_volumes.*.id, count.index)]
-  tags       = [digitalocean_tag.cluster.name]
+  region             = var.region
+  size               = var.node_sizes[count.index]
+  ssh_keys           = [digitalocean_ssh_key.keypair.id]
+  count              = length(var.node_sizes)
+  volume_ids         = [element(digitalocean_volume.node_volumes.*.id, count.index)]
+  tags               = [digitalocean_tag.cluster.name]
   private_networking = true
 }
