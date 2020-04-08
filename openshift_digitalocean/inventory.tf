@@ -12,7 +12,7 @@ data "template_file" "inventory" {
     master_hostname   = digitalocean_droplet.master.0.ipv4_address
     infra_hostname    = var.infra_size != null ? digitalocean_droplet.infra.0.ipv4_address : ""
     bcrypt_passwd     = bcrypt(random_password.admin_password.result)
-    stage_two         = var.infra_size == null && length(var.node_sizes) == 1 ? true : false
+    stage_two         = var.infra_size == null && length(var.node_sizes) >= 1 ? true : false
     free_tier         = var.infra_size != null ? false : true
     compute_nodes = join(
       "\n",
