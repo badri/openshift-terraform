@@ -22,7 +22,7 @@ resource "aws_security_group" "openshift-vpc" {
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["${var.permitted_ip}/32"]
-  }  
+  }
 }
 
 resource "aws_security_group" "openshift-public-ingress" {

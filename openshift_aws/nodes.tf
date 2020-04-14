@@ -13,8 +13,9 @@ resource "aws_eip" "master_eip" {
 
 // infra node
 resource "aws_eip" "infra_eip" {
-  instance = aws_instance.infra.id
+  instance = aws_instance.infra[0].id
   vpc      = true
+  count    = var.infra_size != null ? 1 : 0
 }
 
 resource "aws_instance" "master" {
@@ -49,9 +50,11 @@ resource "aws_instance" "master" {
 resource "aws_instance" "infra" {
   ami = data.aws_ami.centos_7_x64.id
 
-  instance_type        = var.infra_size
+  instance_type        = var.infra_size != null ? var.infra_size : ""
   subnet_id            = aws_subnet.public-subnet.id
   iam_instance_profile = aws_iam_instance_profile.openshift-instance-profile.id
+
+  count = var.infra_size != null ? 1 : 0
 
   vpc_security_group_ids = [
     aws_security_group.openshift-vpc.id,

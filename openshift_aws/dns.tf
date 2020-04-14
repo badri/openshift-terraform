@@ -1,7 +1,7 @@
 // infa domain
 resource "dnsimple_record" "openshift_base" {
   domain = "shapeblock.cloud"
-  value  = aws_eip.infra_eip.public_ip
+  value  = var.infra_size != null ? aws_eip.infra_eip[0].public_ip : aws_eip.master_eip.public_ip
   type   = "A"
   name   = var.domain
 }

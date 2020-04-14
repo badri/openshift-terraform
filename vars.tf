@@ -8,10 +8,13 @@ variable "master_size" {
 }
 
 variable "infra_size" {
+  type    = string
+  default = null
 }
 
 variable "node_sizes" {
-  type = list(string)
+  type    = list(string)
+  default = []
 }
 
 variable "domain" {

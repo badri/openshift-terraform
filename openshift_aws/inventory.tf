@@ -8,13 +8,14 @@ data "template_file" "inventory" {
     public_hostname   = "console.${var.domain}.shapeblock.cloud"
     default_subdomain = "apps.${var.domain}.shapeblock.cloud"
     master_hostname   = aws_instance.master.public_dns
-    infra_hostname   = aws_instance.infra.public_dns
-    // TODO: add 1st node as infra node
+    infra_hostname    = var.infra_size != null ? aws_instance.infra[0].public_dns : ""
+    stage_two         = var.infra_size == null && length(var.node_sizes) >= 1 ? true : false
+    free_tier         = var.infra_size != null ? false : true
     nodes = join(
       "\n",
       formatlist(
         "%s  openshift_node_group_name='node-config-compute' openshift_schedulable=true",
-        aws_instance.nodes.*.public_dns))
+    aws_instance.nodes.*.public_dns))
     cluster_id = var.cluster_id
   }
 }

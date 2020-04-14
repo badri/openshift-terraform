@@ -3,7 +3,7 @@ terraform {
 }
 
 provider "aws" {
-  region  = var.region
+  region = var.region
 }
 
 module "openshift_aws" {
@@ -17,5 +17,5 @@ module "openshift_aws" {
   cluster_name = var.cluster_name
   cluster_id   = var.cluster_id
   permitted_ip = var.permitted_ip
-  infra_size  = var.infra_size
+  infra_size   = var.infra_size
 }

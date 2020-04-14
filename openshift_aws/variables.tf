@@ -32,8 +32,8 @@ variable "subnetaz" {
     eu-west-3      = "eu-west-3a"
     eu-central-1   = "eu-central-1a"
     ap-southeast-1 = "ap-southeast-1a"
-    ap-south-1 = "ap-south-1a"
-    sa-east-1 = "sa-east-1a"
+    ap-south-1     = "ap-south-1a"
+    sa-east-1      = "sa-east-1a"
   }
 }
 
